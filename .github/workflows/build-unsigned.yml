@@ -1,0 +1,63 @@
+name: Build and Release Unsigned IPA
+
+on:
+  push:
+    branches:
+      - main # Change this if your default branch is 'master'
+
+permissions:
+  contents: write # Required to create releases
+
+jobs:
+  build:
+    name: Build Unsigned IPA
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Select latest Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build and Package
+        run: |
+          # 1. Build the app for standard iOS devices without code signing
+          # NOTE: If using CocoaPods, change -project "Name.xcodeproj" to -workspace "Name.xcworkspace"
+          xcodebuild clean build \
+            -project "YOUR_PROJECT_NAME.xcodeproj" \
+            -scheme "YOUR_SCHEME_NAME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath derived_data \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+          # 2. Find the generated .app file dynamically
+          APP_PATH=$(find derived_data/Build/Products/Release-iphoneos -name "*.app" | head -n 1)
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: .app file not found!"
+            exit 1
+          fi
+          
+          APP_NAME=$(basename "$APP_PATH" .app)
+
+          # 3. Create the Payload structure and zip into an .ipa
+          mkdir -p Payload
+          cp -r "$APP_PATH" Payload/
+          zip -q -r "$APP_NAME-unsigned.ipa" Payload
+          
+          echo "IPA_NAME=$APP_NAME-unsigned.ipa" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.sha }}
+          name: Unsigned Build (${{ github.sha }})
+          body: "Automated unsigned IPA build for commit ${{ github.sha }}"
+          files: ${{ env.IPA_NAME }}
+          prerelease: true # Marks it as a pre-release so it doesn't clutter official stable releases
