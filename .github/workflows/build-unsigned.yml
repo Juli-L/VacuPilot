@@ -27,8 +27,8 @@ jobs:
           # 1. Build the app for standard iOS devices without code signing
           # NOTE: If using CocoaPods, change -project "Name.xcodeproj" to -workspace "Name.xcworkspace"
           xcodebuild clean build \
-            -project "YOUR_PROJECT_NAME.xcodeproj" \
-            -scheme "YOUR_SCHEME_NAME" \
+            -project "ValetudoApp/ValetudoApp.xcodeproj" \
+            -scheme "ValetudoApp/ValetudoApp" \
             -configuration Release \
             -sdk iphoneos \
             -derivedDataPath derived_data \
