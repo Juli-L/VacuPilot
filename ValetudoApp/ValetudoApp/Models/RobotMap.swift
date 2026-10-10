@@ -144,6 +144,29 @@ struct EntityMetaData: Codable {
     let angle: Int?
     let id: String?       // UUID fuer ObstacleImagesCapability/img/{id}
     let label: String?    // z.B. "Pedestal (89%)"
+
+    enum CodingKeys: String, CodingKey {
+        case angle, id, label
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        angle = try container.decodeIfPresent(Int.self, forKey: .angle)
+        label = try container.decodeIfPresent(String.self, forKey: .label)
+        
+        if let intId = try? container.decode(Int.self, forKey: .id) {
+            id = String(intId)
+        } else {
+            id = try container.decodeIfPresent(String.self, forKey: .id)
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(angle, forKey: .angle)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encodeIfPresent(label, forKey: .label)
+    }
 }
 
 // MARK: - Map Layer Types

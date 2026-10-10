@@ -394,6 +394,20 @@ final class MapViewModel {
                     }
                 }
 
+                // Carpet
+                for layer in layersCopy where layer.type == "carpet" {
+                    let pixels = layer.decompressedPixels
+                    cgCtx.setFillColor(UIColor.brown.withAlphaComponent(0.4).cgColor)
+                    var i = 0
+                    while i < pixels.count - 1 {
+                        // Draw smaller squares centered in the pixel to avoid bleeding past the thin walls
+                        let x = CGFloat(pixels[i]) * scale + offsetX + pixelScale * 0.2
+                        let y = CGFloat(pixels[i + 1]) * scale + offsetY + pixelScale * 0.2
+                        cgCtx.fill(CGRect(x: x, y: y, width: pixelScale * 0.6, height: pixelScale * 0.6))
+                        i += 2
+                    }
+                }
+
                 // Segments (unselected base color with material texture)
                 for layer in layersCopy where layer.type == "segment" {
                     let pixels = layer.decompressedPixels

@@ -59,6 +59,22 @@ struct InteractiveMapView: View {
             } else {
                 // Fallback: pixel-by-pixel when CGImage not yet ready
                 drawLayersDecompressed(context: context, layers: layers, type: "floor", color: Color(white: 0.92), params: p, pixelSize: pixelSize)
+                
+                // Carpet Layer fallback (textured smaller squares so it doesn't bleed past walls)
+                let pixelScale = p.scale * CGFloat(pixelSize)
+                for layer in layers where layer.type == "carpet" {
+                    let pixels = layer.decompressedPixels
+                    guard !pixels.isEmpty else { continue }
+                    var i = 0
+                    while i < pixels.count - 1 {
+                        let x = CGFloat(pixels[i]) * p.scale + p.offsetX + pixelScale * 0.2
+                        let y = CGFloat(pixels[i + 1]) * p.scale + p.offsetY + pixelScale * 0.2
+                        let rect = CGRect(x: x, y: y, width: pixelScale * 0.6, height: pixelScale * 0.6)
+                        context.fill(Path(rect), with: .color(Color.brown.opacity(0.4)))
+                        i += 2
+                    }
+                }
+                
                 for layer in layers where layer.type == "segment" {
                     let pixels = layer.decompressedPixels
                     guard !pixels.isEmpty else { continue }
@@ -86,16 +102,21 @@ struct InteractiveMapView: View {
                 }
             }
 
-            // DYNAMIC: Entities (path, charger, robot)
+            // DYNAMIC: Entities (path, charger, robot, obstacle, carpet)
             if let entities = map.entities {
-                for entity in entities where entity.type == "path" || entity.type == "predicted_path" {
-                    drawPath(context: context, entity: entity, params: p, pixelSize: pixelSize)
-                }
-                for entity in entities where entity.type == "charger_location" {
-                    drawCharger(context: context, entity: entity, params: p, pixelSize: pixelSize)
-                }
-                for entity in entities where entity.type == "robot_position" {
-                    drawRobot(context: context, entity: entity, params: p, pixelSize: pixelSize)
+                for entity in entities {
+                    let type = (entity.type ?? "").lowercased()
+                    if type == "path" || type == "predicted_path" {
+                        drawPath(context: context, entity: entity, params: p, pixelSize: pixelSize)
+                    } else if type == "charger_location" {
+                        drawCharger(context: context, entity: entity, params: p, pixelSize: pixelSize)
+                    } else if type == "robot_position" {
+                        drawRobot(context: context, entity: entity, params: p, pixelSize: pixelSize)
+                    } else if type.contains("obstacle") {
+                        drawObstacle(context: context, entity: entity, params: p, pixelSize: pixelSize)
+                    } else if type.contains("carpet") {
+                        drawCarpetEntity(context: context, entity: entity, params: p, pixelSize: pixelSize)
+                    }
                 }
             }
 
@@ -472,6 +493,73 @@ struct InteractiveMapView: View {
         let dotSize: CGFloat = 4
         let dotRect = CGRect(x: x - dotSize/2, y: y - dotSize/2, width: dotSize, height: dotSize)
         context.fill(Circle().path(in: dotRect), with: .color(.white))
+    }
+
+    private func drawObstacle(context: GraphicsContext, entity: MapEntity, params: MapParams, pixelSize: Int) {
+        guard let points = entity.points, points.count >= 2 else { return }
+        let ps = CGFloat(pixelSize)
+
+        // Some obstacles are a point [x, y], some are a bounding box [x0, y0, x1, y1, ...]
+        var sumX: CGFloat = 0
+        var sumY: CGFloat = 0
+        let count = points.count / 2
+        for i in 0..<count {
+            sumX += CGFloat(points[i * 2])
+            sumY += CGFloat(points[i * 2 + 1])
+        }
+        let centerX = sumX / CGFloat(count)
+        let centerY = sumY / CGFloat(count)
+
+        let x = centerX / ps * params.scale + params.offsetX
+        let y = centerY / ps * params.scale + params.offsetY
+        let size: CGFloat = 16
+
+        // Triangle or hazard icon for obstacle
+        var triangle = Path()
+        triangle.move(to: CGPoint(x: x, y: y - size/2))
+        triangle.addLine(to: CGPoint(x: x + size/2, y: y + size/2))
+        triangle.addLine(to: CGPoint(x: x - size/2, y: y + size/2))
+        triangle.closeSubpath()
+        
+        // Shadow / Glow
+        context.fill(triangle, with: .color(Color.yellow.opacity(0.9)))
+        context.stroke(triangle, with: .color(Color.orange), style: StrokeStyle(lineWidth: 2))
+        
+        // Exclamation mark dot
+        context.fill(Circle().path(in: CGRect(x: x - 1.5, y: y + size/4 - 1, width: 3, height: 3)), with: .color(.orange))
+        context.fill(Path(CGRect(x: x - 1.5, y: y - size/4 + 1, width: 3, height: size/2 - 2)), with: .color(.orange))
+        
+        // Optional label
+        if let label = entity.metaData?.label {
+            let text = Text(label).font(.system(size: 9, weight: .bold)).foregroundColor(.white)
+            var resolved = context.resolve(text)
+            // draw below icon
+            context.draw(resolved, at: CGPoint(x: x, y: y + size))
+        }
+    }
+
+    private func drawCarpetEntity(context: GraphicsContext, entity: MapEntity, params: MapParams, pixelSize: Int) {
+        guard let points = entity.points, points.count >= 6 else { return }
+        let ps = CGFloat(pixelSize)
+
+        var path = Path()
+        path.move(to: CGPoint(
+            x: CGFloat(points[0]) / ps * params.scale + params.offsetX,
+            y: CGFloat(points[1]) / ps * params.scale + params.offsetY
+        ))
+        
+        var i = 2
+        while i < points.count - 1 {
+            path.addLine(to: CGPoint(
+                x: CGFloat(points[i]) / ps * params.scale + params.offsetX,
+                y: CGFloat(points[i + 1]) / ps * params.scale + params.offsetY
+            ))
+            i += 2
+        }
+        path.closeSubpath()
+
+        // Draw as a dashed outline zone, NO FILL, so it doesn't look like a solid block bleeding out of the room
+        context.stroke(path, with: .color(Color.brown.opacity(0.8)), style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
     }
 
     // MARK: - Zone Drawing

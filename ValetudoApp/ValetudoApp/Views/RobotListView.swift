@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct RobotListView: View {
     @Environment(RobotManager.self) var robotManager
@@ -17,6 +18,9 @@ struct RobotListView: View {
             } else {
                 ForEach(robotManager.robots) { robot in
                     Button {
+                        let impact = UIImpactFeedbackGenerator(style: .medium)
+                        impact.impactOccurred()
+                        
                         selectedRobotId = robot.id
                         navigateToRobot = robot
                     } label: {
@@ -25,8 +29,9 @@ struct RobotListView: View {
                             status: robotManager.robotStates[robot.id],
                             hasUpdate: robotManager.robotUpdateAvailable[robot.id] ?? false
                         )
+                        .contentShape(Rectangle())
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(RobotRowButtonStyle())
                 }
                 .onDelete(perform: deleteRobots)
             }
@@ -197,3 +202,15 @@ struct StatusBadge: View {
             .environment(RobotManager())
     }
 }
+
+// MARK: - Custom Button Style
+struct RobotRowButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .contentShape(Rectangle())
+            .opacity(configuration.isPressed ? 0.6 : 1.0)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+

@@ -122,7 +122,7 @@
 		29662D61BFED0893E6E573CB /* TimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
 		2F02071A0C637423ED754AC4 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
 		34DD7833558396395DCA7D32 /* RobotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotDetailView.swift; sourceTree = "<group>"; };
-		44002D9750AED2C37546A796 /* ValetudoApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ValetudoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		44002D9750AED2C37546A796 /* ValetudoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ValetudoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47A7ADB46F356027F35DDE05 /* MapInteractiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInteractiveView.swift; sourceTree = "<group>"; };
 		4BE7F0D27E21AAB984042AF4 /* RobotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotManager.swift; sourceTree = "<group>"; };
 		4C082534D8ADAC8160B2405F /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
@@ -148,7 +148,7 @@
 		994A51986573E27C730AB9FD /* ConsumablesPreviewSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumablesPreviewSectionView.swift; sourceTree = "<group>"; };
 		9BF4588FA1C92BE6B69DEEFE /* MapCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCacheService.swift; sourceTree = "<group>"; };
 		9CA75525C383460748ED61C0 /* MapViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModelTests.swift; sourceTree = "<group>"; };
-		9D2944F811E75D2A18C7A192 /* ValetudoAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ValetudoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D2944F811E75D2A18C7A192 /* ValetudoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ValetudoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9FD244AAC28A5D50E6DF9E55 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		A3D559CA5D58E9A1A13784EF /* LiveStatsChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStatsChipView.swift; sourceTree = "<group>"; };
 		A7F28A2DBB899F9E33AB726E /* MapMiniMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMiniMapView.swift; sourceTree = "<group>"; };
@@ -435,14 +435,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1500;
-				TargetAttributes = {
-					54E7A0E12B6491E95C754063 = {
-						DevelopmentTeam = J459G9CJT5;
-					};
-					B2971D6203E36800C370817D = {
-						DevelopmentTeam = J459G9CJT5;
-					};
-				};
 			};
 			buildConfigurationList = 1FBCBC696D0D66CF26CE820B /* Build configuration list for PBXProject "ValetudoApp" */;
 			developmentRegion = en;
@@ -655,14 +647,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 99;
-				DEVELOPMENT_TEAM = J459G9CJT5;
+				DEVELOPMENT_TEAM = WQ8U5692Q9;
 				INFOPLIST_FILE = ValetudoApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.simonluthe.ValetudiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.laenge.ValetudiOS;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -672,13 +664,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = WQ8U5692Q9;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = de.simonluthe.ValetudiOSTests;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.laenge.ValetudiOS;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ValetudoApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ValetudoApp";
@@ -689,13 +682,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = WQ8U5692Q9;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = de.simonluthe.ValetudiOSTests;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.laenge.ValetudiOS;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ValetudoApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ValetudoApp";
@@ -708,14 +702,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 99;
-				DEVELOPMENT_TEAM = J459G9CJT5;
+				DEVELOPMENT_TEAM = WQ8U5692Q9;
 				INFOPLIST_FILE = ValetudoApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = de.simonluthe.ValetudiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.laenge.ValetudiOS;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
