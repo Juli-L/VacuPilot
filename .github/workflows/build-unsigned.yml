@@ -3,7 +3,7 @@ name: Build and Release Unsigned IPA
 on:
   push:
     branches:
-      - main # Change this if your default branch is 'master'
+      - feature-ux-and-carpets
 
 permissions:
   contents: write # Required to create releases
