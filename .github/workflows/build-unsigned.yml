@@ -28,7 +28,7 @@ jobs:
           # NOTE: If using CocoaPods, change -project "Name.xcodeproj" to -workspace "Name.xcworkspace"
           xcodebuild clean build \
             -project "ValetudoApp/ValetudoApp.xcodeproj" \
-            -scheme "ValetudoApp/ValetudoApp" \
+            -scheme "ValetudoApp" \
             -configuration Release \
             -sdk iphoneos \
             -derivedDataPath derived_data \
